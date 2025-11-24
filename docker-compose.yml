@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  server:
+    image: vsomeip-server
+    container_name: vsomeip-server
+    build: ./server
+    networks:
+      - vsomeip-net
+    ports:
+      - "30509:30509"
+    volumes:
+      - /tmp:/tmp
+      - /proc:/host_proc:ro
+    working_dir: /app/build
+    command: /app/build/myapp
+
+  client:
+    image: vsomeip-client1
+    build: ./client
+    container_name: vsomeip-client1
+    networks:
+      - vsomeip-net
+    working_dir: /app/build
+    volumes:
+      - /tmp:/tmp
+    command: /app/build/myclient
+                # Allocate a pseudo-TTY (optional)
+  #client2:
+    #image: vsomeip-client2
+    #build: ./client2
+    #container_name: vsomeip-client2
+    #networks:
+     # - vsomeip-net
+    #working_dir: /app/build
+    #volumes:
+     # - /tmp:/tmp
+    #command: /app/build/myclient2
+
+
+networks:
+  vsomeip-net:
+    driver: bridge
